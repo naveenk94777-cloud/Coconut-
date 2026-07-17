@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>தேங்காய் தொழில் கணக்கு</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Tamil:ital@0;1&family=Hind+Madurai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --husk:#3E2A1C;
+    --husk-2:#5C4230;
+    --palm:#3B5B3F;
+    --palm-2:#5A7F5E;
+    --coir:#F3EBDA;
+    --coir-2:#EAE0C8;
+    --copra:#B9862E;
+    --copra-l:#F1DBAE;
+    --danger:#A3402F;
+    --danger-l:#F3DCD5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Hind Madurai',sans-serif;
+    background:var(--coir);
+    color:var(--husk);
+    padding:0 0 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+  header{
+    background:var(--husk);
+    color:var(--coir);
+    padding:36px 20px 44px;
+    position:relative;
+    overflow:hidden;
+  }
+  header .wrap{position:relative;z-index:2;}
+  header h1{
+    font-family:'Tiro Tamil',serif;
+    font-size:32px;
+    margin:0 0 6px;
+    font-weight:400;
+  }
+  header p{margin:0;color:var(--copra-l);font-size:15px;}
+  .husk-lines{
+    position:absolute;top:0;right:-40px;bottom:0;width:220px;
+    background:repeating-linear-gradient(115deg, var(--husk-2) 0px, var(--husk-2) 2px, transparent 2px, transparent 14px);
+    opacity:.5;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:-28px 0 28px;
+    position:relative;
+    z-index:3;
+  }
+  .card{
+    background:#fff;
+    border:1px solid var(--coir-2);
+    border-radius:10px;
+    padding:16px 14px;
+    box-shadow:0 3px 10px rgba(62,42,28,.08);
+  }
+  .card .label{font-size:12.5px;color:var(--husk-2);margin-bottom:6px;letter-spacing:.2px;}
+  .card .val{font-size:21px;font-weight:600;font-family:'Tiro Tamil',serif;}
+  .card.income .val{color:var(--palm);}
+  .card.expense .val{color:var(--danger);}
+  .card.balance .val{color:var(--copra);}
+
+  form.entry{
+    background:#fff;
+    border:1px solid var(--coir-2);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:28px;
+  }
+  form.entry h2{
+    font-family:'Tiro Tamil',serif;
+    font-size:19px;
+    font-weight:400;
+    margin:0 0 16px;
+    color:var(--husk);
+  }
+  .row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .row > div{flex:1;min-width:130px;}
+  label{display:block;font-size:12.5px;color:var(--husk-2);margin-bottom:4px;}
+  input, select{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--coir-2);
+    border-radius:7px;
+    font-size:14.5px;
+    font-family:inherit;
+    background:var(--coir);
+    color:var(--husk);
+  }
+  input:focus, select:focus{outline:2px solid var(--copra);border-color:var(--copra);}
+  .type-toggle{display:flex;gap:8px;}
+  .type-btn{
+    flex:1;
+    padding:9px 10px;
+    border-radius:7px;
+    border:1px solid var(--coir-2);
+    background:var(--coir);
+    cursor:pointer;
+    font-size:14px;
+    text-align:center;
+    color:var(--husk-2);
+  }
+  .type-btn.active.income{background:var(--palm);border-color:var(--palm);color:#fff;}
+  .type-btn.active.expense{background:var(--danger);border-color:var(--danger);color:#fff;}
+
+  button.submit{
+    margin-top:6px;
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:7px;
+    background:var(--copra);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  button.submit:hover{background:#a3781f;}
+
+  .list h2{
+    font-family:'Tiro Tamil',serif;
+    font-size:19px;
+    font-weight:400;
+    margin:0 0 14px;
+  }
+  .entry-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#fff;
+    border:1px solid var(--coir-2);
+    border-radius:9px;
+    padding:12px 14px;
+    margin-bottom:8px;
+  }
+  .entry-row .left{display:flex;align-items:center;gap:12px;}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .dot.income{background:var(--palm);}
+  .dot.expense{background:var(--danger);}
+  .desc{font-size:14.5px;font-weight:500;}
+  .meta{font-size:12px;color:var(--husk-2);margin-top:2px;}
+  .amt{font-size:15.5px;font-weight:600;font-family:'Tiro Tamil',serif;}
+  .amt.income{color:var(--palm);}
+  .amt.expense{color:var(--danger);}
+  .del{
+    background:none;border:none;color:var(--husk-2);cursor:pointer;font-size:18px;
+    margin-left:10px;line-height:1;padding:4px;
+  }
+  .del:hover{color:var(--danger);}
+  .empty{
+    text-align:center;padding:40px 20px;color:var(--husk-2);font-size:14.5px;
+    background:#fff;border:1px dashed var(--coir-2);border-radius:10px;
+  }
+  .loading{text-align:center;padding:30px;color:var(--husk-2);font-size:14px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="husk-lines"></div>
+  <div class="wrap">
+    <h1>தேங்காய் தொழில் கணக்கு</h1>
+    <p>வருமானம் மற்றும் செலவு பதிவேடு</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="cards">
+    <div class="card income"><div class="label">மொத்த வருமானம்</div><div class="val" id="totalIncome">₹0</div></div>
+    <div class="card expense"><div class="label">மொத்த செலவு</div><div class="val" id="totalExpense">₹0</div></div>
+    <div class="card balance"><div class="label">நிகர லாபம்</div><div class="val" id="totalBalance">₹0</div></div>
+  </div>
+
+  <form class="entry" id="entryForm">
+    <h2>புதிய பதிவு சேர்க்க</h2>
+    <div class="row">
+      <div class="type-toggle">
+        <div class="type-btn active income" data-type="income" id="btnIncome">வருமானம்</div>
+        <div class="type-btn expense" data-type="expense" id="btnExpense">செலவு</div>
+      </div>
+    </div>
+    <div class="row" id="categoryRow">
+      <div>
+        <label for="category">வகை</label>
+        <select id="category">
+          <option value="">-- தேர்வு செய்க --</option>
+          <option value="தேங்காய் விற்பனை">தேங்காய் விற்பனை</option>
+          <option value="கோப்பரை">கோப்பரை</option>
+          <option value="பச்சை காய் எடுத்தல்">பச்சை காய் எடுத்தல்</option>
+          <option value="கருப்பு காய் எடுத்தல்">கருப்பு காய் எடுத்தல்</option>
+          <option value="மற்றவை">மற்றவை</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="desc">கூடுதல் விவரம் (விருப்பம்)</label>
+        <input type="text" id="desc" placeholder="எ.கா. வாடிக்கையாளர் பெயர், குறிப்பு">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="amount">தொகை (₹)</label>
+        <input type="number" id="amount" min="0" step="0.01" placeholder="0" required>
+      </div>
+      <div>
+        <label for="date">தேதி</label>
+        <input type="date" id="date" required>
+      </div>
+    </div>
+    <button type="submit" class="submit">பதிவு சேர்</button>
+  </form>
+
+  <div class="list">
+    <h2>பதிவுகள்</h2>
+    <div id="entriesList"><div class="loading">ஏற்றுகிறது...</div></div>
+  </div>
+</div>
+
+<script>
+let entries = [];
+let currentType = 'income';
+const btnIncome = document.getElementById('btnIncome');
+const btnExpense = document.getElementById('btnExpense');
+const dateInput = document.getElementById('date');
+dateInput.value = new Date().toISOString().split('T')[0];
+
+const categorySelect = document.getElementById('category');
+const incomeCategories = [
+  ['', '-- தேர்வு செய்க --'],
+  ['தேங்காய் விற்பனை', 'தேங்காய் விற்பனை'],
+  ['கோப்பரை', 'கோப்பரை'],
+  ['பச்சை காய் எடுத்தல்', 'பச்சை காய் எடுத்தல்'],
+  ['கருப்பு காய் எடுத்தல்', 'கருப்பு காய் எடுத்தல்'],
+  ['மற்றவை', 'மற்றவை']
+];
+const expenseCategories = [
+  ['', '-- தேர்வு செய்க --'],
+  ['உரம்', 'உரம்'],
+  ['தொழிலாளர் கூலி', 'தொழிலாளர் கூலி'],
+  ['போக்குவரத்து', 'போக்குவரத்து'],
+  ['மற்றவை', 'மற்றவை']
+];
+
+function fillCategoryOptions(list){
+  categorySelect.innerHTML = list.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+}
+fillCategoryOptions(incomeCategories);
+
+btnIncome.addEventListener('click', () => setType('income'));
+btnExpense.addEventListener('click', () => setType('expense'));
+function setType(t){
+  currentType = t;
+  btnIncome.classList.toggle('active', t==='income');
+  btnExpense.classList.toggle('active', t==='expense');
+  fillCategoryOptions(t==='income' ? incomeCategories : expenseCategories);
+}
+
+function fmt(n){
+  return '₹' + Number(n).toLocaleString('en-IN', {maximumFractionDigits:2});
+}
+
+async function loadEntries(){
+  try{
+    const res = await window.storage.get('thengai-entries');
+    entries = res ? JSON.parse(res.value) : [];
+  }catch(e){
+    entries = [];
+  }
+  render();
+}
+
+async function saveEntries(){
+  try{
+    await window.storage.set('thengai-entries', JSON.stringify(entries));
+  }catch(e){
+    console.error('Storage error', e);
+  }
+}
+
+function render(){
+  const listEl = document.getElementById('entriesList');
+  let income = 0, expense = 0;
+  entries.forEach(e => { if(e.type==='income') income += Number(e.amount); else expense += Number(e.amount); });
+  document.getElementById('totalIncome').textContent = fmt(income);
+  document.getElementById('totalExpense').textContent = fmt(expense);
+  document.getElementById('totalBalance').textContent = fmt(income - expense);
+
+  if(entries.length === 0){
+    listEl.innerHTML = '<div class="empty">இன்னும் பதிவுகள் இல்லை. மேலே படிவத்தில் முதல் பதிவை சேர்க்கவும்.</div>';
+    return;
+  }
+
+  const sorted = [...entries].sort((a,b) => new Date(b.date) - new Date(a.date));
+  listEl.innerHTML = sorted.map(e => {
+    const d = new Date(e.date);
+    const dateStr = d.toLocaleDateString('ta-IN', {day:'numeric', month:'short', year:'numeric'});
+    return `<div class="entry-row">
+      <div class="left">
+        <span class="dot ${e.type}"></span>
+        <div>
+          <div class="desc">${escapeHtml(e.desc)}</div>
+          <div class="meta">${dateStr}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;">
+        <span class="amt ${e.type}">${e.type==='income'?'+':'-'}${fmt(e.amount)}</span>
+        <button class="del" aria-label="நீக்கு" onclick="deleteEntry('${e.id}')">&times;</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHtml(s){
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+window.deleteEntry = async function(id){
+  entries = entries.filter(e => e.id !== id);
+  render();
+  await saveEntries();
+}
+
+document.getElementById('entryForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const category = categorySelect.value;
+  const extra = document.getElementById('desc').value.trim();
+  const amount = document.getElementById('amount').value;
+  const date = document.getElementById('date').value;
+  if(!category || !amount || !date) return;
+
+  const desc = extra ? `${category} - ${extra}` : category;
+
+  entries.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+    type: currentType,
+    desc, amount: Number(amount), date
+  });
+
+  categorySelect.value = '';
+  document.getElementById('desc').value = '';
+  document.getElementById('amount').value = '';
+  render();
+  await saveEntries();
+});
+
+loadEntries();
+</script>
+</body>
+</html>
